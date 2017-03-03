@@ -1,0 +1,166 @@
+;;This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
+(defun  fib (x)
+  "fibonacci of numbers"
+  (if (= x 0)
+	0
+  	(if (= x 1)
+		1 
+  		(+ (fib(- x 1)) (fib(- x 2)))))
+)
+
+(defun  reversed (xs)
+  "reverse a list"
+	(if ( null (rest xs))
+		(list (first xs)) 
+	(append (reversed(rest xs)) (list(first xs))))
+	
+	
+)
+
+
+(defun  is_prime (xVal)
+  "prime"
+(cond
+	((= xVal 2) T)
+	((< xVal 2) NIL)
+	((> xVal 2) (is_primeH xVal 2))
+	
+)
+)
+(defun  is_primeH (num y)
+  "prime do stuff"
+  (if(= num y)
+	T
+	(if(= (mod num y) 0)
+		NIL
+ 		(is_primeH num (inc y))))
+	
+)
+(defun inc(x)
+	(+ x 1)
+)
+
+(defun  nub (xs)
+  "only unique vals"
+  (nub_help (first xs) (rest xs) '())
+)
+(defun nub_help(xs restVals uniques)
+ (cond 
+	 ((null xs) '())
+	 ( (contains xs uniques) (nub_help (first restVals) (rest restVals) uniques))
+	 (T	(append (list xs)  (nub_help (first restVals) (rest restVals) (append uniques (list xs))))) 
+		 
+))
+(defun contains(x xs)
+(if (null xs)
+	NIL
+ 	(if (= x (first xs))
+		T
+		(if(null (rest xs))
+			NIL
+			(contains x (rest xs)))))
+)
+
+(defun  zip_with(function x y)
+  "for length do func (x y)"
+(cond
+ 	( (= (len x) 0) '()) 
+	( (= (len y) 0) '() )
+	((<=(len x) (len y)) (help_zip function x y) )
+	((>(len x) (len y))  (help_zip function y x) )
+ )
+)
+(defun help_zip (function xs ys)
+ (cond    
+	((null  xs) '())
+	(T (append (list (funcall function (first xs) (first ys))) (help_zip function (rest xs) (rest ys))))
+)
+ 
+)  
+(defun len (xs)
+  (if (null xs) 0
+    (+ 1 (len (rest xs))))
+)
+
+(defun collatz(n)
+   (cond 
+        ( (= n 1) '(1))
+        ( (= (mod n 2) 0) (append (list n) (collatzList(/ n 2)))          )
+        ( (= (mod n 2) 1) (append (list n) (collatzList(+ (* n 3) 1)))    ) 
+   )
+)
+
+(defun  list_report (xs)
+  "write all to list"
+  (list (/ (mean xs) (len xs)) (median xs) (modeFinder xs) )  
+  
+)
+
+(defun mean(xs)
+(if (null (rest xs))
+		(first xs)
+	 	(+ (first xs) (mean (rest xs))))
+ )
+
+
+(defun median(xs)
+
+	(sort xs #'<)
+	(if (evenP (len xs))
+		(/ (len xs) 2) 
+		(/(+ (len xs) 1) 2)))
+		#|(findVal xs (/ (len xs) 2)      1 1)		
+		(findVal xs (/(+ (len xs) 1) 2) 1 0) ))|#
+
+(defun findVal(xs xsIndex currIndex E0)
+"finds the median"
+ (if (and ( = xsIndex currIndex) (= E0 0))
+	(first xs)
+	(if (and (= xsIndex currIndex)(= E0 1))
+		(float(/(+(first xs)(second xs))2))
+		(findVal (rest xs) xsIndex (+ currIndex 1) E0)))
+
+)
+
+(defun modeFinder(xs)
+ " finds the mode, driver"
+ (let* (                   ;; or, use let*
+      (uniques (nub xs) )
+      (vals xs)
+      (counts (for_finder uniques vals))
+      (max (maxF (first counts) (rest counts)))
+    )
+ (forFinderHelp counts uniques max)	
+)
+)
+
+(defun for_finder(uniqVals vals)
+(if (null uniqVals)
+	0
+	(append (list (count (first uniqVals) vals)) (for_finder (rest uniqVals) vals))) 
+ 
+)
+
+(defun forFinderHelp(counts nubVal maxVal)
+ (if (=(first counts) maxVal) 
+	(append (list(first nubVal)) (forFinderHelp (rest counts) (rest nubVal) maxVal))
+	(forFinderHelp (rest counts) (rest nubVal) maxVal))
+	
+ 	
+
+)
+(defun maxF(val xs)
+(if (null xs)
+	val
+ 	(if (< val (first xs))
+		(maxF (first xs) (rest xs))
+		(maxF (val (rest xs)))))
+)
+#|
+(defun  check_sudoku (grid)
+  "optional documentation string"
+ ;; bodyExpression
+)
+|#
